@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tools — Fresh Sky AI for Civil Air Patrol</title>
+<meta name="description" content="Free AI tools for CAP members and squadrons: form drafter, specialty-track coach, SUI prep checklist.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="canonical" href="https://cap.freshskyai.com/tools">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#0f172a;background:#f8fafc;line-height:1.55}
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.6rem;background:#fff;border-bottom:1px solid #e5e7eb}
+nav a.brand{color:#1e3a8a;text-decoration:none;font-weight:800}
+nav a.back{color:#64748b;text-decoration:none}
+main{max-width:880px;margin:0 auto;padding:2.5rem 1.4rem 4rem}
+h1{font-size:1.9rem;margin:0 0 .4rem;font-weight:800}
+.lede{color:#64748b;margin:0 0 2rem;font-size:1.05rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1.4rem;text-decoration:none;color:#0f172a;display:block;transition:border-color .15s,transform .15s}
+.card:hover{border-color:#1e3a8a;transform:translateY(-2px);box-shadow:0 4px 12px rgba(30,58,138,.12)}
+.card .ic{font-size:1.8rem;line-height:1}
+.card h2{font-size:1.1rem;font-weight:700;margin:.6rem 0 .35rem;color:#1e3a8a}
+.card p{font-size:.9rem;color:#64748b;margin:0}
+.foot{color:#94a3b8;font-size:.82rem;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid #e5e7eb;text-align:center}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="/">🛩️ Fresh Sky AI for CAP</a>
+  <a class="back" href="/">← Home</a>
+</nav>
+
+<main>
+  <h1>Free tools for CAP members + squadrons</h1>
+  <p class="lede">All free, all anonymous, all AI-assisted drafts (verify against current CAPRs / CAPPs and your wing before submission). Public-domain content, not affiliated with Civil Air Patrol Inc.</p>
+
+  <div class="grid">
+    {% for slug in slugs %}
+      {% set t = tools[slug] %}
+      <a class="card" href="/tools/{{ slug }}">
+        <div class="ic">{{ t.icon }}</div>
+        <h2>{{ t.title }}</h2>
+        <p>{{ t.tagline }}</p>
+      </a>
+    {% endfor %}
+  </div>
+
+  <p class="foot">
+    Want a tool that's not here? <a href="mailto:admin@freshskyllc.com" style="color:#1e3a8a">Tell me what eats your time</a>.
+  </p>
+</main>
+
+</body></html>

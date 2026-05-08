@@ -51,6 +51,8 @@
 
     .tools { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px; }
     .tool { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:22px; box-shadow:0 1px 3px rgba(0,0,0,.04); transition:transform 0.15s, box-shadow 0.15s; }
+    a.tool { text-decoration:none; color:inherit; display:block; }
+    a.tool:hover { transform:translateY(-2px); box-shadow:0 4px 14px rgba(30,58,138,.12); border-color:#bfdbfe; }
     .tool:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,.08); }
     .tool .icon { font-size:32px; margin-bottom:10px; }
     .tool h3 { margin:0 0 6px; font-size:18px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
@@ -138,26 +140,26 @@
         <div class="why">Saves the squadron CC ~30-45 min of weekly prep.</div>
       </div>
 
-      <div class="tool">
+      <a class="tool" href="/tools/form-drafter">
         <div class="icon">📜</div>
-        <h3>CAP Form Drafter <span class="pill soon">Roadmap</span></h3>
-        <p>Voice/text → drafts of common CAPFs (Form 5, 60-80/81/82 mission qual, SQTR, 78 mishap, 99 deviation). Same idea as our NFIRS tool for fire departments, applied to CAP paperwork.</p>
-        <div class="why">~15-30 min saved per form.</div>
-      </div>
+        <h3>CAP Form Drafter <span class="pill live">Live</span></h3>
+        <p>Drafts of common CAPFs (CAPF 2A, 24, 31, 60-80, etc.) given your activity / mission context. Plain CAP-correct vocabulary; calls out missing fields instead of guessing.</p>
+        <div class="why">~15–30 min saved per form. Verify against current CAPMS / capmembers.com before submission.</div>
+      </a>
 
-      <div class="tool">
+      <a class="tool" href="/tools/specialty-track">
         <div class="icon">🪖</div>
-        <h3>Specialty Track Coach <span class="pill soon">Roadmap</span></h3>
-        <p>21 specialty tracks × Tech/Senior/Master ratings = 63 progression paths. Tells you exactly what's left for your next rating with the right CAPP cite, plus realistic time estimates.</p>
-        <div class="why">Expands the PDP coaching to specialty tracks.</div>
-      </div>
+        <h3>Specialty Track Coach <span class="pill live">Live</span></h3>
+        <p>6-month plan for your senior-member specialty track — next 3 SQTR line items in priority order, study resources from eServices LMS / AXIS, mentor / OJT prompts, rating checkpoints.</p>
+        <div class="why">Personalized to track + current rating + your hours/month. SQTR / CAPRs on capmembers.com remain authoritative.</div>
+      </a>
 
-      <div class="tool">
+      <a class="tool" href="/tools/sui-prep">
         <div class="icon">📊</div>
-        <h3>SUI Prep Checklist <span class="pill soon">Roadmap</span></h3>
-        <p>Subordinate Unit Inspection (SUI) prep checklist + readiness scorer. Walk through the inspection criteria with prompts; get a gap report before the inspector arrives.</p>
-        <div class="why">Squadron-level audit prep that doesn't depend on remembering everything.</div>
-      </div>
+        <h3>SUI Prep Checklist <span class="pill live">Live</span></h3>
+        <p>Week-by-week prep plan for Subordinate Unit Inspection. The Big Six compliance areas, documents to pull, what inspectors actually look at, red flags to fix BEFORE the walk-in.</p>
+        <div class="why">Squadron-level audit prep that doesn't depend on remembering every CAPR.</div>
+      </a>
     </div>
 
     <div class="pitch">
