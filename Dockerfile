@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl git && rm 
     && pip install --no-cache-dir -r requirements.txt \
     && apt-get purge -y git && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
-COPY app.py ./
+COPY app.py tools_data.py ./
 COPY templates/ templates/
 
 RUN useradd -m appuser && chown -R appuser:appuser /app
