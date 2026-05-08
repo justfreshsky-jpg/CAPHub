@@ -90,9 +90,153 @@ def _sitemap():
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         '  <url><loc>https://cap.freshskyai.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>\n'
+        '  <url><loc>https://cap.freshskyai.com/wings</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>\n'
         '</urlset>\n',
         mimetype='application/xml',
     )
+
+
+# ─── CAP Wings dashboard ────────────────────────────────────────────────
+# Single listing page for all 52 CAP wings (50 states + DC + Puerto Rico),
+# grouped by the 8 CAP regions. Each wing links to gocivilairpatrol.com
+# (the canonical wing page) plus the Fresh Sky CAP tools that work for
+# that wing's members. Pure information architecture — no internal data
+# we don't have access to. Free for CAP audience.
+_CAP_REGIONS = [
+    ('Great Lakes Region', [
+        ('IL', 'Illinois Wing'), ('IN', 'Indiana Wing'),
+        ('KY', 'Kentucky Wing'), ('MI', 'Michigan Wing'),
+        ('OH', 'Ohio Wing'),     ('WI', 'Wisconsin Wing'),
+    ]),
+    ('Middle East Region', [
+        ('DC', 'National Capital Wing'), ('DE', 'Delaware Wing'),
+        ('MD', 'Maryland Wing'),         ('NC', 'North Carolina Wing'),
+        ('SC', 'South Carolina Wing'),   ('VA', 'Virginia Wing'),
+        ('WV', 'West Virginia Wing'),
+    ]),
+    ('North Central Region', [
+        ('IA', 'Iowa Wing'),     ('KS', 'Kansas Wing'),
+        ('MN', 'Minnesota Wing'),('MO', 'Missouri Wing'),
+        ('NE', 'Nebraska Wing'), ('ND', 'North Dakota Wing'),
+        ('SD', 'South Dakota Wing'),
+    ]),
+    ('Northeast Region', [
+        ('CT', 'Connecticut Wing'),  ('ME', 'Maine Wing'),
+        ('MA', 'Massachusetts Wing'),('NH', 'New Hampshire Wing'),
+        ('NJ', 'New Jersey Wing'),   ('NY', 'New York Wing'),
+        ('PA', 'Pennsylvania Wing'), ('RI', 'Rhode Island Wing'),
+        ('VT', 'Vermont Wing'),
+    ]),
+    ('Pacific Region', [
+        ('AK', 'Alaska Wing'), ('CA', 'California Wing'),
+        ('HI', 'Hawaii Wing'), ('NV', 'Nevada Wing'),
+        ('OR', 'Oregon Wing'), ('WA', 'Washington Wing'),
+    ]),
+    ('Rocky Mountain Region', [
+        ('CO', 'Colorado Wing'), ('ID', 'Idaho Wing'),
+        ('MT', 'Montana Wing'),  ('UT', 'Utah Wing'),
+        ('WY', 'Wyoming Wing'),
+    ]),
+    ('Southeast Region', [
+        ('AL', 'Alabama Wing'), ('FL', 'Florida Wing'),
+        ('GA', 'Georgia Wing'), ('MS', 'Mississippi Wing'),
+        ('PR', 'Puerto Rico Wing'), ('TN', 'Tennessee Wing'),
+    ]),
+    ('Southwest Region', [
+        ('AR', 'Arkansas Wing'), ('AZ', 'Arizona Wing'),
+        ('LA', 'Louisiana Wing'),('NM', 'New Mexico Wing'),
+        ('OK', 'Oklahoma Wing'), ('TX', 'Texas Wing'),
+    ]),
+]
+
+
+@app.route('/wings')
+def _wings():
+    rows_html = []
+    total_wings = 0
+    for region_name, wings in _CAP_REGIONS:
+        wing_cards = []
+        for code, name in wings:
+            total_wings += 1
+            slug = code.lower()
+            # Canonical wing URL pattern on gocivilairpatrol.com
+            cap_url = f'https://www.{slug}wg.cap.gov'
+            wing_cards.append(
+                f'<li class="wing"><strong>{name}</strong>'
+                f'<span class="code">{code}</span>'
+                f'<a class="extlink" href="{cap_url}" target="_blank" rel="noopener">'
+                f'{slug}wg.cap.gov ↗</a></li>'
+            )
+        rows_html.append(
+            f'<section class="region"><h2>{region_name}</h2>'
+            f'<ul class="wings">{"".join(wing_cards)}</ul></section>'
+        )
+
+    body = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CAP Wing dashboard — Fresh Sky AI for Civil Air Patrol</title>
+<meta name="description" content="All 52 Civil Air Patrol wings — 50 states plus DC and Puerto Rico — grouped by the 8 CAP regions. Plus free Fresh Sky AI tools for CAP members and squadrons.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="canonical" href="https://cap.freshskyai.com/wings">
+<link rel="icon" type="image/png" href="/static/favicon.png">
+<style>
+  *,*::before,*::after{{box-sizing:border-box}}
+  body{{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#0f172a;background:#f8fafc;line-height:1.55}}
+  nav{{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.6rem;background:#fff;border-bottom:1px solid #e5e7eb}}
+  nav a{{color:#1e3a8a;text-decoration:none}}
+  nav a.brand{{font-weight:800}}
+  main{{max-width:980px;margin:0 auto;padding:2.5rem 1.4rem 4rem}}
+  h1{{font-size:1.9rem;margin:0 0 .4rem;font-weight:800}}
+  .lede{{color:#64748b;margin:0 0 2rem;font-size:1.05rem}}
+  .tools{{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1.2rem 1.4rem;margin:0 0 2.5rem}}
+  .tools h3{{margin:0 0 .6rem;font-size:.92rem;text-transform:uppercase;letter-spacing:.06em;color:#64748b}}
+  .tools ul{{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:.5rem}}
+  .tools li a{{display:inline-block;padding:.5rem .9rem;background:#1e3a8a;color:#fff;border-radius:8px;font-size:.92rem;text-decoration:none;font-weight:600}}
+  .tools li a:hover{{background:#1e40af}}
+  section.region{{margin-bottom:2rem}}
+  section.region h2{{font-size:1.05rem;font-weight:700;color:#1e3a8a;margin:0 0 .8rem;padding-bottom:.3rem;border-bottom:2px solid #fbbf24;display:inline-block}}
+  ul.wings{{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.5rem}}
+  li.wing{{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:.7rem .9rem;display:flex;align-items:center;gap:.6rem;transition:border-color .15s}}
+  li.wing:hover{{border-color:#1e3a8a}}
+  li.wing .code{{background:#1e3a8a;color:#fff;font-size:.7rem;font-weight:700;padding:.15rem .5rem;border-radius:4px;margin-right:auto}}
+  li.wing strong{{font-size:.9rem}}
+  li.wing a.extlink{{font-size:.78rem;color:#64748b;text-decoration:none}}
+  li.wing a.extlink:hover{{color:#1e3a8a;text-decoration:underline}}
+  .footer-note{{color:#94a3b8;font-size:.82rem;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid #e5e7eb;text-align:center}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="/">🛩️ Fresh Sky AI for CAP</a>
+  <a href="/">← Home</a>
+</nav>
+
+<main>
+  <h1>CAP Wing dashboard</h1>
+  <p class="lede">All <strong>{total_wings}</strong> Civil Air Patrol wings — 50 states plus DC (National Capital Wing) and Puerto Rico — grouped by the 8 CAP regions. Click any wing to visit its official site at gocivilairpatrol.com.</p>
+
+  <div class="tools">
+    <h3>Free tools for any wing's members + squadrons</h3>
+    <ul>
+      <li><a href="https://capr.freshskyai.com" target="_blank" rel="noopener">CAPR Search — Q&A over CAPRs/CAPPs</a></li>
+      <li><a href="https://capstudy.freshskyai.com" target="_blank" rel="noopener">CAPStudy — cadet AT prep quizzes</a></li>
+      <li><a href="https://capmeeting.freshskyai.com" target="_blank" rel="noopener">CAPMeeting — squadron meeting builder</a></li>
+    </ul>
+  </div>
+
+  {''.join(rows_html)}
+
+  <p class="footer-note">
+    Public-domain regulation content. Not affiliated with or endorsed by Civil Air Patrol Inc.<br>
+    Always free for CAP members + squadrons. <a href="https://www.freshskyai.com/support" target="_blank" rel="noopener">Support the project</a> if these tools help you.
+  </p>
+</main>
+
+</body></html>"""
+    return Response(body, mimetype='text/html')
 
 
 @app.route('/privacy')
