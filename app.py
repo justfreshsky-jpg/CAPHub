@@ -99,13 +99,20 @@ def _sitemap():
         f'<changefreq>monthly</changefreq><priority>0.7</priority></url>\n'
         for s in _all_slugs()
     )
+    # All 52 per-wing detail pages
+    wing_codes = [c.lower() for _, ws in _CAP_REGIONS for c, _ in ws]
+    wing_urls = ''.join(
+        f'  <url><loc>https://cap.freshskyai.com/wing/{c}</loc>'
+        f'<changefreq>monthly</changefreq><priority>0.5</priority></url>\n'
+        for c in wing_codes
+    )
     return Response(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         '  <url><loc>https://cap.freshskyai.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>\n'
         '  <url><loc>https://cap.freshskyai.com/wings</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>\n'
         '  <url><loc>https://cap.freshskyai.com/tools</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>\n'
-        + extras +
+        + extras + wing_urls +
         '</urlset>\n',
         mimetype='application/xml',
     )
@@ -165,6 +172,92 @@ _CAP_REGIONS = [
 ]
 
 
+# Lookup helper for /wing/<code> routing
+_WING_BY_CODE = {code: (region, name) for region, wings in _CAP_REGIONS for code, name in wings}
+
+
+@app.route('/wing/<code>')
+def _wing_detail(code):
+    code = code.upper()
+    info = _WING_BY_CODE.get(code)
+    if not info:
+        return Response('Wing not found', status=404, mimetype='text/plain')
+    region, name = info
+    slug = code.lower()
+    cap_url = f'https://www.{slug}wg.cap.gov'
+    body = f"""<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>{name} ({code}) — Fresh Sky AI for Civil Air Patrol</title>
+<meta name="description" content="Fresh Sky AI free tools for {name} ({code}) members and squadrons. Part of {region}.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="canonical" href="https://cap.freshskyai.com/wing/{slug}">
+<link rel="icon" type="image/png" href="/static/favicon.png">
+<style>
+*,*::before,*::after{{box-sizing:border-box}}
+body{{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#0f172a;background:#f8fafc;line-height:1.6}}
+nav{{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.6rem;background:#fff;border-bottom:1px solid #e5e7eb}}
+nav a{{color:#1e3a8a;text-decoration:none;font-weight:600}}
+main{{max-width:760px;margin:0 auto;padding:2.5rem 1.4rem 4rem}}
+.crumb{{color:#64748b;font-size:.85rem;margin:0 0 1rem}}
+.crumb a{{color:#1e3a8a;text-decoration:none}}
+h1{{font-size:1.9rem;margin:0 0 .4rem;font-weight:800}}
+.region{{color:#64748b;font-size:.95rem;margin:0 0 1.6rem}}
+.code{{display:inline-block;background:#1e3a8a;color:#fff;font-size:.78rem;font-weight:700;padding:.2rem .55rem;border-radius:5px;margin-right:.4rem;vertical-align:middle}}
+.cta{{display:inline-block;padding:.85rem 1.4rem;background:#1e3a8a;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;margin:0 .5rem .5rem 0}}
+.cta.alt{{background:#fff;color:#1e3a8a;border:1px solid #1e3a8a}}
+section{{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1.4rem;margin:1.4rem 0}}
+section h2{{font-size:1.05rem;margin:0 0 .6rem;color:#1e3a8a}}
+section ul{{padding-left:1.2rem;margin:0}}
+.foot{{color:#94a3b8;font-size:.82rem;margin-top:2rem;padding-top:1.2rem;border-top:1px solid #e5e7eb;text-align:center}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/">🛩️ Fresh Sky AI for CAP</a>
+  <a href="/wings" style="color:#64748b;font-weight:400">← All wings</a>
+</nav>
+
+<main>
+  <p class="crumb"><a href="/">Home</a> &nbsp;›&nbsp; <a href="/wings">Wings</a> &nbsp;›&nbsp; {name}</p>
+  <h1><span class="code">{code}</span>{name}</h1>
+  <p class="region">{region}</p>
+
+  <a class="cta" href="{cap_url}" target="_blank" rel="noopener">Visit {slug}wg.cap.gov →</a>
+  <a class="cta alt" href="/tools">Try Fresh Sky CAP tools →</a>
+
+  <section>
+    <h2>Free tools for {code} members + squadrons</h2>
+    <ul>
+      <li><a href="https://capr.freshskyai.com" target="_blank" rel="noopener">CAPR Search</a> — Q&amp;A over CAPRs / CAPPs</li>
+      <li><a href="https://capstudy.freshskyai.com" target="_blank" rel="noopener">CAPStudy</a> — cadet Achievement Test prep</li>
+      <li><a href="https://capmeeting.freshskyai.com" target="_blank" rel="noopener">CAPMeeting</a> — squadron meeting agenda builder</li>
+      <li><a href="/tools/form-drafter">CAP Form Drafter</a> — drafts of common CAPFs from your activity context</li>
+      <li><a href="/tools/specialty-track">Specialty Track Coach</a> — 6-month plan for your senior-member track</li>
+      <li><a href="/tools/sui-prep">SUI Prep Checklist</a> — Subordinate Unit Inspection prep</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Where the canonical info lives</h2>
+    <ul>
+      <li><strong>{name} official site</strong> — <a href="{cap_url}" target="_blank" rel="noopener">{cap_url}</a> (wing CC, encampment, group / squadron locator, events)</li>
+      <li><strong>National CAP</strong> — <a href="https://www.gocivilairpatrol.com" target="_blank" rel="noopener">gocivilairpatrol.com</a></li>
+      <li><strong>Member resources</strong> — <a href="https://www.gocivilairpatrol.com/members" target="_blank" rel="noopener">capmembers.com</a> (CAPRs, CAPPs, eServices LMS)</li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    Information architecture only — Fresh Sky AI doesn't have access to {code}-internal data
+    (rosters, eServices status, etc.). For wing-internal info, sign in at the wing site.
+    Always free for CAP members + squadrons.
+  </p>
+</main>
+
+</body></html>"""
+    return Response(body, mimetype='text/html')
+
+
 @app.route('/wings')
 def _wings():
     rows_html = []
@@ -177,7 +270,8 @@ def _wings():
             # Canonical wing URL pattern on gocivilairpatrol.com
             cap_url = f'https://www.{slug}wg.cap.gov'
             wing_cards.append(
-                f'<li class="wing"><strong>{name}</strong>'
+                f'<li class="wing"><a href="/wing/{slug}" class="winglink">'
+                f'<strong>{name}</strong></a>'
                 f'<span class="code">{code}</span>'
                 f'<a class="extlink" href="{cap_url}" target="_blank" rel="noopener">'
                 f'{slug}wg.cap.gov ↗</a></li>'
@@ -217,6 +311,8 @@ def _wings():
   li.wing:hover{{border-color:#1e3a8a}}
   li.wing .code{{background:#1e3a8a;color:#fff;font-size:.7rem;font-weight:700;padding:.15rem .5rem;border-radius:4px;margin-right:auto}}
   li.wing strong{{font-size:.9rem}}
+  li.wing a.winglink{{text-decoration:none;color:#0f172a;flex:1 0 auto}}
+  li.wing a.winglink:hover strong{{color:#1e3a8a;text-decoration:underline}}
   li.wing a.extlink{{font-size:.78rem;color:#64748b;text-decoration:none}}
   li.wing a.extlink:hover{{color:#1e3a8a;text-decoration:underline}}
   .footer-note{{color:#94a3b8;font-size:.82rem;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid #e5e7eb;text-align:center}}
