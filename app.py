@@ -342,7 +342,7 @@ def _wings():
 
   <p class="footer-note">
     Public-domain regulation content. Not affiliated with or endorsed by Civil Air Patrol Inc.<br>
-    Always free for CAP members + squadrons. <a href="https://www.freshskyai.com/support" target="_blank" rel="noopener">Support the project</a> if these tools help you.
+    Always free for CAP members + squadrons.
   </p>
 </main>
 
