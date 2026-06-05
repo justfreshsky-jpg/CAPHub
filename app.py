@@ -427,12 +427,16 @@ def _llm_mistral(system, user):
     return r.json()['choices'][0]['message']['content']
 
 
-_PROVIDERS_TOOLS = [
-    ('groq', _llm_groq),
-    ('cerebras', _llm_cerebras),
-    ('gemini', _llm_gemini),
-    ('mistral', _llm_mistral),
-]
+from freshsky_common.llm import LLMChain  # noqa: E402
+
+_SHARED_LLM = LLMChain()
+
+
+def _llm_shared(system, user):
+    return _SHARED_LLM.complete(system=system, user=user) or None
+
+
+_PROVIDERS_TOOLS = [('shared', _llm_shared)]
 
 
 def _llm_call(system: str, user: str) -> str:
