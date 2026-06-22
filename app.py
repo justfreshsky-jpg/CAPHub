@@ -1,14 +1,13 @@
 """
 CAPHub — Flask app: landing page, /wings dashboard, /tools roadmap MVPs.
 
-Standalone (no freshsky_common dependency). The /tools/<slug> routes
+Uses the shared Fresh Sky privacy and provider controls. The /tools/<slug> routes
 ship the documented roadmap items: form drafter, specialty-track coach,
-SUI prep checklist. Stateless, US/EU LLM providers only.
+SUI prep checklist. Stateless, with a restricted U.S. provider chain.
 """
 import logging
 import os
 
-import requests
 from flask import Response, Flask, jsonify, render_template, request
 
 from tools_data import TOOLS as _TOOLS, get_tool as _get_tool, all_slugs as _all_slugs
@@ -16,7 +15,6 @@ from tools_data import TOOLS as _TOOLS, get_tool as _get_tool, all_slugs as _all
 app = Flask(__name__)
 
 _logger = logging.getLogger(__name__)
-_HTTP_TIMEOUT = 35
 
 
 @app.after_request
@@ -360,76 +358,11 @@ def _terms():
     return Response(_TERMS_HTML, mimetype='text/html')
 
 
-# ─── LLM fallback chain (US/EU providers only) ──────────────────────────
-
-
-def _llm_groq(system, user):
-    key = os.environ.get('GROQ_KEY', '')
-    if not key:
-        return None
-    r = requests.post(
-        'https://api.groq.com/openai/v1/chat/completions',
-        headers={'Authorization': f'Bearer {key}'},
-        json={'model': os.environ.get('GROQ_MODEL', 'llama-3.3-70b-versatile'),
-              'messages': [{'role': 'system', 'content': system},
-                           {'role': 'user', 'content': user}],
-              'temperature': 0.3},
-        timeout=_HTTP_TIMEOUT)
-    r.raise_for_status()
-    return r.json()['choices'][0]['message']['content']
-
-
-def _llm_cerebras(system, user):
-    key = os.environ.get('CEREBRAS_KEY', '')
-    if not key:
-        return None
-    r = requests.post(
-        'https://api.cerebras.ai/v1/chat/completions',
-        headers={'Authorization': f'Bearer {key}'},
-        json={'model': os.environ.get('CEREBRAS_MODEL', 'llama-3.3-70b'),
-              'messages': [{'role': 'system', 'content': system},
-                           {'role': 'user', 'content': user}],
-              'temperature': 0.3},
-        timeout=_HTTP_TIMEOUT)
-    r.raise_for_status()
-    return r.json()['choices'][0]['message']['content']
-
-
-def _llm_gemini(system, user):
-    key = os.environ.get('GEMINI_KEY', '')
-    if not key:
-        return None
-    r = requests.post(
-        f'https://generativelanguage.googleapis.com/v1beta/models/'
-        f'gemini-2.5-flash:generateContent?key={key}',
-        headers={'Content-Type': 'application/json'},
-        json={'system_instruction': {'parts': [{'text': system}]},
-              'contents': [{'role': 'user', 'parts': [{'text': user}]}],
-              'generationConfig': {'temperature': 0.3}},
-        timeout=_HTTP_TIMEOUT)
-    r.raise_for_status()
-    return r.json()['candidates'][0]['content']['parts'][0]['text']
-
-
-def _llm_mistral(system, user):
-    key = os.environ.get('MISTRAL_KEY', '')
-    if not key:
-        return None
-    r = requests.post(
-        'https://api.mistral.ai/v1/chat/completions',
-        headers={'Authorization': f'Bearer {key}'},
-        json={'model': os.environ.get('MISTRAL_MODEL', 'mistral-small-latest'),
-              'messages': [{'role': 'system', 'content': system},
-                           {'role': 'user', 'content': user}],
-              'temperature': 0.3},
-        timeout=_HTTP_TIMEOUT)
-    r.raise_for_status()
-    return r.json()['choices'][0]['message']['content']
-
+# Provider calls are centralized in the privacy-restricted shared chain.
 
 from freshsky_common.llm import LLMChain, install_provider_metrics  # noqa: E402
 
-_SHARED_LLM = LLMChain()
+_SHARED_LLM = LLMChain(privacy_profile="us_public")
 install_provider_metrics(app)
 
 

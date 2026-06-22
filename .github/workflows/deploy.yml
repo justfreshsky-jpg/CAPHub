@@ -50,9 +50,11 @@ jobs:
           gcloud run deploy caphub \
             --source . \
             --region us-central1 \
+            --update-env-vars=LLM_PRIVACY_PROFILE=us_public \
             --allow-unauthenticated \
             --min-instances=0 \
             --max-instances=5 \
             --cpu-throttling \
-            --update-secrets=GROQ_KEY=groq-key:latest,CEREBRAS_KEY=cerebras-key:latest,MISTRAL_KEY=mistral-key:latest \
+            --remove-secrets=MISTRAL_KEY \
+            --update-secrets=CEREBRAS_KEY=cerebras-key:latest \
             --quiet
