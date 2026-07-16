@@ -43,11 +43,11 @@ _PRIVACY_HTML = """<!DOCTYPE html>
 </head><body>
 <a href="/">← Back to Fresh Sky AI for Civil Air Patrol</a>
 <h1>Privacy Policy — Fresh Sky AI for Civil Air Patrol</h1>
-<p><em>Last updated 2026-05-07</em></p>
+<p><em>Last updated 2026-07-16</em></p>
 <h2>What we collect</h2>
 <p>Fresh Sky AI for Civil Air Patrol is a stateless tool. We do <strong>not</strong> require accounts. We do <strong>not</strong> store the text or voice input you submit. We do <strong>not</strong> upload member rosters, patient data, or any personally identifying information.</p>
 <h2>What we send to AI providers</h2>
-<p>The text or voice transcript you submit is sent to one of several US/EU-jurisdiction LLM providers (Groq, Cerebras, Mistral, HuggingFace via Together, Sambanova, Cloudflare Workers AI, or Google Gemini) for processing. None of these providers train on inputs from our paid-tier API calls (Gemini's free tier may; we do not pass PII).</p>
+<p>The text or voice transcript you submit is sent through the configured restricted U.S. AI provider pool. Provider availability can change. The shared privacy layer rejects several common identifier patterns before provider calls, but automated screening is not a substitute for removing identifying information. Do not submit PII, member rosters, payment data, or sensitive operational details.</p>
 <h2>What gets logged</h2>
 <p>Standard request metadata (IP address, timestamp, response code) is logged by Google Cloud Run for operational purposes (debugging, abuse prevention) and rotated automatically per Google retention defaults. We do not associate logs with individual users.</p>
 <h2>Cookies</h2>
@@ -118,8 +118,8 @@ def _sitemap():
 
 # ─── CAP Wings dashboard ────────────────────────────────────────────────
 # Single listing page for all 52 CAP wings (50 states + DC + Puerto Rico),
-# grouped by the 8 CAP regions. Each wing links to gocivilairpatrol.com
-# (the canonical wing page) plus the Fresh Sky CAP tools that work for
+# grouped by the 8 CAP regions. Each wing links to its CAP-managed .cap.gov
+# site plus the Fresh Sky CAP tools that work for
 # that wing's members. Pure information architecture — no internal data
 # we don't have access to. Free for CAP audience.
 _CAP_REGIONS = [
@@ -241,7 +241,7 @@ section ul{{padding-left:1.2rem;margin:0}}
     <ul>
       <li><strong>{name} official site</strong> — <a href="{cap_url}" target="_blank" rel="noopener">{cap_url}</a> (wing CC, encampment, group / squadron locator, events)</li>
       <li><strong>National CAP</strong> — <a href="https://www.gocivilairpatrol.com" target="_blank" rel="noopener">gocivilairpatrol.com</a></li>
-      <li><strong>Member resources</strong> — <a href="https://www.gocivilairpatrol.com/members" target="_blank" rel="noopener">capmembers.com</a> (CAPRs, CAPPs, eServices LMS)</li>
+      <li><strong>Member resources</strong> — <a href="https://www.gocivilairpatrol.com/members" target="_blank" rel="noopener">CAP NHQ member resources</a> (publications and links to member systems)</li>
     </ul>
   </section>
 
@@ -265,7 +265,7 @@ def _wings():
         for code, name in wings:
             total_wings += 1
             slug = code.lower()
-            # Canonical wing URL pattern on gocivilairpatrol.com
+            # CAP-managed wing sites use the <wing>wg.cap.gov pattern.
             cap_url = f'https://www.{slug}wg.cap.gov'
             wing_cards.append(
                 f'<li class="wing"><a href="/wing/{slug}" class="winglink">'
@@ -325,7 +325,7 @@ def _wings():
 
 <main>
   <h1>CAP Wing dashboard</h1>
-  <p class="lede">All <strong>{total_wings}</strong> Civil Air Patrol wings — 50 states plus DC (National Capital Wing) and Puerto Rico — grouped by the 8 CAP regions. Click any wing to visit its official site at gocivilairpatrol.com.</p>
+  <p class="lede">All <strong>{total_wings}</strong> Civil Air Patrol wings — 50 states plus DC (National Capital Wing) and Puerto Rico — grouped by the 8 CAP regions. Click any wing to visit its CAP-managed <code>.cap.gov</code> site.</p>
 
   <div class="tools">
     <h3>Free tools for any wing's members + squadrons</h3>
@@ -339,7 +339,7 @@ def _wings():
   {''.join(rows_html)}
 
   <p class="footer-note">
-    Public-domain regulation content. Not affiliated with or endorsed by Civil Air Patrol Inc.<br>
+    Uses publicly available CAP publication references. Not affiliated with or endorsed by Civil Air Patrol Inc.<br>
     Always free for CAP members + squadrons.
   </p>
 </main>
