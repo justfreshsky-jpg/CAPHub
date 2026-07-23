@@ -14,6 +14,9 @@ from tools_data import TOOLS as _TOOLS, get_tool as _get_tool, all_slugs as _all
 
 app = Flask(__name__)
 
+from freshsky_common.revenue import install_visuals  # noqa: E402
+install_visuals(app)
+
 _logger = logging.getLogger(__name__)
 
 
