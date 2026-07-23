@@ -1,6 +1,6 @@
 # CAPHub
 
-Static landing page for Fresh Sky AI's free Civil Air Patrol tools. Live at <https://cap.freshskyai.com>.
+Landing page and paid planning tools for Fresh Sky AI's Civil Air Patrol audience. Live at <https://cap.freshskyai.com>.
 
 The umbrella site that:
 - Tells the volunteer-CAP-member-and-engineer pitch
