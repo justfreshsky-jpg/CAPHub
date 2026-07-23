@@ -13,9 +13,22 @@ from flask import Response, Flask, jsonify, render_template, request
 from tools_data import TOOLS as _TOOLS, get_tool as _get_tool, all_slugs as _all_slugs
 
 app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY', os.urandom(32))
 
 from freshsky_common.revenue import install_visuals  # noqa: E402
 install_visuals(app)
+from freshsky_common.freemium import register_freemium  # noqa: E402
+from freshsky_common.hulec import install_hulec  # noqa: E402
+from freshsky_common.security import install_security_headers  # noqa: E402
+
+register_freemium(
+    app,
+    primary_url=os.environ.get('APP_URL', 'https://cap.freshskyai.com'),
+    community_mode=True,
+    gate_all_post=True,
+)
+install_hulec(app, slug='cap')
+install_security_headers(app)
 
 _logger = logging.getLogger(__name__)
 
@@ -70,7 +83,7 @@ _TERMS_HTML = """<!DOCTYPE html>
 <h1>Terms of Use — Fresh Sky AI for Civil Air Patrol</h1>
 <p><em>Last updated 2026-05-07</em></p>
 <h2>What this is</h2>
-<p>Fresh Sky AI for Civil Air Patrol is a free volunteer-built tool offered by Fresh Sky LLC for use by U.S. Civil Air Patrol members and squadrons. No charge. No contract. No license required.</p>
+<p>Fresh Sky AI for Civil Air Patrol is a paid, privacy-first tool offered by Fresh Sky LLC for U.S. Civil Air Patrol members and squadrons. Three previews are included; continued access is $29.99/month and may be canceled monthly.</p>
 <h2>What this is not</h2>
 <p>Fresh Sky AI for Civil Air Patrol is <strong>not</strong> affiliated with any government agency, military service, or official entity. Output is AI-generated and intended as a draft or study aid only — the human user is responsible for verifying accuracy against authoritative current sources before acting on or filing anything.</p>
 <h2>Use at your own discretion</h2>
@@ -124,7 +137,7 @@ def _sitemap():
 # grouped by the 8 CAP regions. Each wing links to its CAP-managed .cap.gov
 # site plus the Fresh Sky CAP tools that work for
 # that wing's members. Pure information architecture — no internal data
-# we don't have access to. Free for CAP audience.
+# we don't have access to. Advanced access for CAP audience.
 _CAP_REGIONS = [
     ('Great Lakes Region', [
         ('IL', 'Illinois Wing'), ('IN', 'Indiana Wing'),
@@ -189,7 +202,7 @@ def _wing_detail(code):
     body = f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8">
 <title>{name} ({code}) — Fresh Sky AI for Civil Air Patrol</title>
-<meta name="description" content="Fresh Sky AI free tools for {name} ({code}) members and squadrons. Part of {region}.">
+<meta name="description" content="Fresh Sky AI tools for {name} ({code}) members and squadrons. Part of {region}.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="canonical" href="https://cap.freshskyai.com/wing/{slug}">
 <link rel="icon" type="image/png" href="/static/favicon.png">
@@ -228,7 +241,7 @@ section ul{{padding-left:1.2rem;margin:0}}
   <a class="cta alt" href="/tools">Try Fresh Sky CAP tools →</a>
 
   <section>
-    <h2>Free tools for {code} members + squadrons</h2>
+    <h2>Advanced tools for {code} members + squadrons</h2>
     <ul>
       <li><a href="https://capr.freshskyai.com" target="_blank" rel="noopener">CAPR Search</a> — Q&amp;A over CAPRs / CAPPs</li>
       <li><a href="https://capstudy.freshskyai.com" target="_blank" rel="noopener">CAPStudy</a> — cadet Achievement Test prep</li>
@@ -251,7 +264,7 @@ section ul{{padding-left:1.2rem;margin:0}}
   <p class="foot">
     Information architecture only — Fresh Sky AI doesn't have access to {code}-internal data
     (rosters, eServices status, etc.). For wing-internal info, sign in at the wing site.
-    Always free for CAP members + squadrons.
+    Three previews, then $29.99/month for CAP members + squadrons.
   </p>
 </main>
 
@@ -287,7 +300,7 @@ def _wings():
 <head>
 <meta charset="UTF-8">
 <title>CAP Wing dashboard — Fresh Sky AI for Civil Air Patrol</title>
-<meta name="description" content="All 52 Civil Air Patrol wings — 50 states plus DC and Puerto Rico — grouped by the 8 CAP regions. Plus free Fresh Sky AI tools for CAP members and squadrons.">
+<meta name="description" content="All 52 Civil Air Patrol wings — 50 states plus DC and Puerto Rico — grouped by the 8 CAP regions. Plus Fresh Sky AI tools for CAP members and squadrons.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="canonical" href="https://cap.freshskyai.com/wings">
 <link rel="icon" type="image/png" href="/static/favicon.png">
@@ -331,7 +344,7 @@ def _wings():
   <p class="lede">All <strong>{total_wings}</strong> Civil Air Patrol wings — 50 states plus DC (National Capital Wing) and Puerto Rico — grouped by the 8 CAP regions. Click any wing to visit its CAP-managed <code>.cap.gov</code> site.</p>
 
   <div class="tools">
-    <h3>Free tools for any wing's members + squadrons</h3>
+    <h3>Advanced tools for any wing's members + squadrons</h3>
     <ul>
       <li><a href="https://capr.freshskyai.com" target="_blank" rel="noopener">CAPR Search — Q&A over CAPRs/CAPPs</a></li>
       <li><a href="https://capstudy.freshskyai.com" target="_blank" rel="noopener">CAPStudy — cadet AT prep quizzes</a></li>
@@ -343,7 +356,7 @@ def _wings():
 
   <p class="footer-note">
     Uses publicly available CAP publication references. Not affiliated with or endorsed by Civil Air Patrol Inc.<br>
-    Always free for CAP members + squadrons.
+    Three previews, then $29.99/month for CAP members + squadrons.
   </p>
 </main>
 

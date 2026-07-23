@@ -2,7 +2,7 @@
 CAP tool definitions for /tools/<slug> routes on cap.freshskyai.com.
 
 Each tool is a single LLM-driven worksheet — one form, one prompt,
-one result page. Stateless. Free for CAP members + squadrons. Uses publicly
+one result page. Stateless. Three previews, then paid access. Uses publicly
 available publication references; not affiliated with Civil Air Patrol Inc.
 """
 from __future__ import annotations
