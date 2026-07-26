@@ -53,7 +53,7 @@ jobs:
           gcloud run deploy caphub \
             --source . \
             --region us-central1 \
-            --update-env-vars=APP_URL=https://cap.freshskyai.com,GOOGLE_CLIENT_ID="${GOOGLE_CLIENT_ID}",SESSION_COOKIE_SECURE=true,GOOGLE_CLOUD_PROJECT=neon-glyph-491500-e2,VERTEX_AI_ENABLED=true,VERTEX_AI_LOCATION=us-central1,VERTEX_AI_MODEL=gemini-2.5-flash-lite,LLM_PRIVACY_PROFILE=us_public,FRESHSKY_SUBSCRIPTIONS_ENABLED=true,FRESHSKY_SUBSCRIPTION_TIER=civic,FRESHSKY_SUBSCRIPTION_PRICE_ID=price_1TwyaVCh3Z13FbXd5YcgzDx8,FRESHSKY_SUBSCRIPTION_AMOUNT_CENTS=1499,FRESHSKY_FREE_REQUEST_LIMIT=3 \
+            --update-env-vars=APP_URL=https://cap.freshskyai.com,GOOGLE_CLIENT_ID="${GOOGLE_CLIENT_ID}",SESSION_COOKIE_SECURE=true,GOOGLE_CLOUD_PROJECT=neon-glyph-491500-e2,VERTEX_AI_ENABLED=true,VERTEX_AI_LOCATION=us-central1,VERTEX_AI_MODEL=gemini-2.5-flash-lite,LLM_PRIVACY_PROFILE=us_public,FRESHSKY_WORKSPACE_ID=civic,FRESHSKY_SUBSCRIPTIONS_ENABLED=true,FRESHSKY_SUBSCRIPTION_TIER=civic,FRESHSKY_SUBSCRIPTION_PRICE_ID=price_1TwyaVCh3Z13FbXd5YcgzDx8,FRESHSKY_SUBSCRIPTION_AMOUNT_CENTS=1499,FRESHSKY_FREE_REQUEST_LIMIT=3 \
             --allow-unauthenticated \
             --min-instances=0 \
             --max-instances=5 \

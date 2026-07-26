@@ -49,6 +49,33 @@ class ReferenceDataTests(unittest.TestCase):
         workflow = (ROOT / '.github/workflows/deploy.yml').read_text()
         self.assertIn("- 'tools_data.py'", workflow)
 
+    def test_civic_access_and_sensitive_data_boundary_are_explicit(self):
+        app_source = (ROOT / 'app.py').read_text()
+        landing = (ROOT / 'templates/index.html').read_text()
+        tool_page = (ROOT / 'templates/tools_run.html').read_text()
+        requirements = (ROOT / 'requirements.txt').read_text()
+        workflow = (ROOT / '.github/workflows/deploy.yml').read_text()
+
+        self.assertIn("workspace_id='civic'", app_source)
+        self.assertIn('community_mode=True', app_source)
+        self.assertIn('gate_all_post=True', app_source)
+        for text in (landing, tool_page):
+            self.assertIn('unofficial, experimental', text.lower())
+            for boundary in (
+                'rosters', 'CAPIDs', 'PHI', 'incident identifiers',
+                'operational secrets',
+            ):
+                self.assertIn(boundary, text)
+        self.assertIn('$14.99/month', landing)
+        self.assertIn('40 usage units', landing)
+        self.assertIn('200 per month', landing)
+        self.assertIn(
+            '05fe2d0a11fd81ee82f16f6270fc061b0fc15b37',
+            requirements,
+        )
+        self.assertIn('FRESHSKY_WORKSPACE_ID=civic', workflow)
+        self.assertIn('FRESHSKY_SUBSCRIPTION_TIER=civic', workflow)
+
 
 if __name__ == '__main__':
     unittest.main()

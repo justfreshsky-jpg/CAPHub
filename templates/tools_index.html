@@ -15,6 +15,7 @@ nav a.back{color:#64748b;text-decoration:none}
 main{max-width:880px;margin:0 auto;padding:2.5rem 1.4rem 4rem}
 h1{font-size:1.9rem;margin:0 0 .4rem;font-weight:800}
 .lede{color:#64748b;margin:0 0 2rem;font-size:1.05rem}
+.safety-boundary{background:#fff7ed;color:#7c2d12;border:2px solid #fb923c;border-radius:10px;padding:1rem 1.1rem;margin:0 0 1.5rem;font-size:.92rem}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
 .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:1.4rem;text-decoration:none;color:#0f172a;display:block;transition:border-color .15s,transform .15s}
 .card:hover{border-color:#1e3a8a;transform:translateY(-2px);box-shadow:0 4px 12px rgba(30,58,138,.12)}
@@ -87,8 +88,13 @@ a:hover{color:#c4b5fd}
 </nav>
 
 <main>
-  <h1>Advanced tools for CAP members + squadrons</h1>
-  <p class="lede">Three previews, then Advanced access at $29.99/month. Anonymous, all AI-assisted drafts. Verify against current CAP NHQ publications and your wing before submission. Uses publicly available publication references; not affiliated with Civil Air Patrol Inc.</p>
+  <h1>Unofficial, experimental CAP tools</h1>
+  <p class="lede">Three previews, then Civic access at $14.99/month with 40 usage units/day and 200/month. Civic access covers CivicOps and CAP modules only, not non-Civic Fresh Sky products. Verify every AI-assisted draft against current CAP NHQ publications and your wing before submission.</p>
+  <aside class="safety-boundary" role="note">
+    <strong>No sensitive data:</strong> Never submit rosters, CAPIDs, PHI, incident identifiers,
+    operational secrets, or eServices data. These modules are not affiliated with or endorsed
+    by Civil Air Patrol Inc.
+  </aside>
 
   <div class="grid">
     {% for slug in slugs %}

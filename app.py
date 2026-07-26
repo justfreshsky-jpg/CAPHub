@@ -26,6 +26,7 @@ register_freemium(
     primary_url=os.environ.get('APP_URL', 'https://cap.freshskyai.com'),
     community_mode=True,
     gate_all_post=True,
+    workspace_id='civic',
 )
 install_hulec(app, slug='cap')
 install_security_headers(app)
@@ -59,11 +60,11 @@ _PRIVACY_HTML = """<!DOCTYPE html>
 </head><body>
 <a href="/">← Back to Fresh Sky AI for Civil Air Patrol</a>
 <h1>Privacy Policy — Fresh Sky AI for Civil Air Patrol</h1>
-<p><em>Last updated 2026-07-16</em></p>
+<p><em>Last updated 2026-07-26</em></p>
 <h2>What we collect</h2>
-<p>Fresh Sky AI for Civil Air Patrol is a stateless tool. We do <strong>not</strong> require accounts. We do <strong>not</strong> store the text or voice input you submit. We do <strong>not</strong> upload member rosters, patient data, or any personally identifying information.</p>
+<p>Fresh Sky AI for Civil Air Patrol is a stateless tool. We do <strong>not</strong> store the text or voice input you submit. An email address is used only when you choose to sign in for paid access. The CAP modules do not accept or need member rosters, CAPIDs, patient health information (PHI), incident identifiers, or operational secrets.</p>
 <h2>What we send to AI providers</h2>
-<p>The text or voice transcript you submit is sent through the configured restricted U.S. AI provider pool. Provider availability can change. The shared privacy layer rejects several common identifier patterns before provider calls, but automated screening is not a substitute for removing identifying information. Do not submit PII, member rosters, payment data, or sensitive operational details.</p>
+<p>The text or voice transcript you submit is sent through the configured restricted U.S. AI provider pool. Provider availability can change. The shared privacy layer rejects several common identifier patterns before provider calls, but automated screening is not a substitute for removing identifying information. <strong>Do not submit rosters, CAPIDs, PHI, incident identifiers, operational secrets, payment data, or other sensitive data.</strong></p>
 <h2>What gets logged</h2>
 <p>Standard request metadata (IP address, timestamp, response code) is logged by Google Cloud Run for operational purposes (debugging, abuse prevention) and rotated automatically per Google retention defaults. We do not associate logs with individual users.</p>
 <h2>Cookies</h2>
@@ -81,13 +82,13 @@ _TERMS_HTML = """<!DOCTYPE html>
 </head><body>
 <a href="/">← Back to Fresh Sky AI for Civil Air Patrol</a>
 <h1>Terms of Use — Fresh Sky AI for Civil Air Patrol</h1>
-<p><em>Last updated 2026-05-07</em></p>
+<p><em>Last updated 2026-07-26</em></p>
 <h2>What this is</h2>
-<p>Fresh Sky AI for Civil Air Patrol is a paid, privacy-first tool offered by Fresh Sky LLC for U.S. Civil Air Patrol members and squadrons. Three previews are included; continued access is $29.99/month and may be canceled monthly.</p>
+<p>Fresh Sky AI for Civil Air Patrol is an unofficial, experimental, privacy-first set of Civic modules offered by Fresh Sky LLC. Three previews are included; Civic access is $14.99/month with an allowance of 40 usage units per day and 200 per month, and may be canceled monthly. Civic access covers CivicOps and CAP modules only; it does not grant access to non-Civic Fresh Sky products. Existing eligible subscriptions continue to be recognized.</p>
 <h2>What this is not</h2>
-<p>Fresh Sky AI for Civil Air Patrol is <strong>not</strong> affiliated with any government agency, military service, or official entity. Output is AI-generated and intended as a draft or study aid only — the human user is responsible for verifying accuracy against authoritative current sources before acting on or filing anything.</p>
+<p>These experimental CAP modules are <strong>not</strong> official Civil Air Patrol systems and are not affiliated with or endorsed by Civil Air Patrol, any government agency, or any military service. Output is AI-generated and intended as a draft or study aid only — the human user is responsible for verifying accuracy against authoritative current sources before acting on or filing anything.</p>
 <h2>Use at your own discretion</h2>
-<p>You agree to use the tool in good faith. Do not submit personally identifying information (PII) about third parties, patient health information (PHI), or classified/sensitive operational details. The tool is not designed to handle such data and we do not warrant against any misuse.</p>
+<p>You agree to use the tool in good faith. <strong>Do not submit rosters, CAPIDs, personally identifying information (PII), patient health information (PHI), incident identifiers, operational secrets, or classified/sensitive operational details.</strong> The tool is not designed to handle such data and we do not warrant against any misuse.</p>
 <h2>No warranty</h2>
 <p>The tool is provided "as is" without warranty of any kind. Fresh Sky LLC disclaims all liability for damages arising from use or misuse of the output.</p>
 <h2>Changes</h2>
@@ -137,7 +138,7 @@ def _sitemap():
 # grouped by the 8 CAP regions. Each wing links to its CAP-managed .cap.gov
 # site plus the Fresh Sky CAP tools that work for
 # that wing's members. Pure information architecture — no internal data
-# we don't have access to. Advanced access for CAP audience.
+# we don't have access to. Civic workspace access for the CAP audience.
 _CAP_REGIONS = [
     ('Great Lakes Region', [
         ('IL', 'Illinois Wing'), ('IN', 'Indiana Wing'),
@@ -241,7 +242,7 @@ section ul{{padding-left:1.2rem;margin:0}}
   <a class="cta alt" href="/tools">Try Fresh Sky CAP tools →</a>
 
   <section>
-    <h2>Advanced tools for {code} members + squadrons</h2>
+    <h2>Unofficial, experimental Civic tools for {code} members + squadrons</h2>
     <ul>
       <li><a href="https://capr.freshskyai.com" target="_blank" rel="noopener">CAPR Search</a> — Q&amp;A over CAPRs / CAPPs</li>
       <li><a href="https://capstudy.freshskyai.com" target="_blank" rel="noopener">CAPStudy</a> — cadet Achievement Test prep</li>
@@ -262,9 +263,11 @@ section ul{{padding-left:1.2rem;margin:0}}
   </section>
 
   <p class="foot">
-    Information architecture only — Fresh Sky AI doesn't have access to {code}-internal data
-    (rosters, eServices status, etc.). For wing-internal info, sign in at the wing site.
-    Three previews, then $29.99/month for CAP members + squadrons.
+    Unofficial, experimental modules only — not affiliated with or endorsed by Civil Air Patrol.
+    Fresh Sky AI doesn't have access to {code}-internal data. Never submit rosters, CAPIDs, PHI,
+    incident identifiers, operational secrets, or eServices data. For wing-internal info, sign in
+    at the wing site. Three previews, then Civic access at $14.99/month with 40 usage units/day
+    and 200/month. Civic access does not include non-Civic Fresh Sky products.
   </p>
 </main>
 
@@ -344,7 +347,7 @@ def _wings():
   <p class="lede">All <strong>{total_wings}</strong> Civil Air Patrol wings — 50 states plus DC (National Capital Wing) and Puerto Rico — grouped by the 8 CAP regions. Click any wing to visit its CAP-managed <code>.cap.gov</code> site.</p>
 
   <div class="tools">
-    <h3>Advanced tools for any wing's members + squadrons</h3>
+    <h3>Unofficial, experimental Civic tools for any wing's members + squadrons</h3>
     <ul>
       <li><a href="https://capr.freshskyai.com" target="_blank" rel="noopener">CAPR Search — Q&A over CAPRs/CAPPs</a></li>
       <li><a href="https://capstudy.freshskyai.com" target="_blank" rel="noopener">CAPStudy — cadet AT prep quizzes</a></li>
@@ -355,8 +358,11 @@ def _wings():
   {''.join(rows_html)}
 
   <p class="footer-note">
-    Uses publicly available CAP publication references. Not affiliated with or endorsed by Civil Air Patrol Inc.<br>
-    Three previews, then $29.99/month for CAP members + squadrons.
+    Unofficial, experimental modules using publicly available CAP publication references.
+    Not affiliated with or endorsed by Civil Air Patrol Inc.<br>
+    Never submit rosters, CAPIDs, PHI, incident identifiers, operational secrets, or eServices data.<br>
+    Three previews, then Civic access at $14.99/month with 40 usage units/day and 200/month.
+    Civic access does not include non-Civic Fresh Sky products.
   </p>
 </main>
 

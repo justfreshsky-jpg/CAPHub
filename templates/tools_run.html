@@ -32,6 +32,7 @@ button:hover{background:#1e40af}
 .sources li{margin:.35rem 0;color:#64748b}
 .sources a{font-weight:600}
 .disclaimer{color:#94a3b8;font-size:.82rem;margin-top:1.5rem;padding-top:1rem;border-top:1px solid #e5e7eb}
+.safety-boundary{background:#fff7ed;color:#7c2d12;border:2px solid #fb923c;border-radius:10px;padding:1rem 1.1rem;margin:1rem 0 1.2rem;font-size:.92rem}
 </style>
 <style id="fs-legacy-skin" media="not all">
 /* Fresh Sky AI portfolio skin — futuristic dark theme overlay. Injected
@@ -100,8 +101,12 @@ a:hover{color:#c4b5fd}
   <p class="crumb"><a href="/">Home</a> &nbsp;›&nbsp; <a href="/tools">Tools</a> &nbsp;›&nbsp; {{ tool.title }}</p>
   <h1>{{ tool.icon }} {{ tool.title }}</h1>
   <p class="tag">{{ tool.tagline }}</p>
+  <aside class="safety-boundary" id="safetyBoundary" role="note">
+    <strong>Unofficial, experimental module — no sensitive data.</strong>
+    Never submit rosters, CAPIDs, PHI, incident identifiers, operational secrets, or eServices data.
+  </aside>
 
-  <form method="POST" action="/tools/{{ slug }}" autocomplete="off">
+  <form method="POST" action="/tools/{{ slug }}" autocomplete="off" aria-describedby="safetyBoundary">
     {% for key, label, kind in tool.fields %}
       <div class="field">
         <label for="f-{{ key }}">{{ label }}</label>
@@ -139,8 +144,8 @@ a:hover{color:#c4b5fd}
   {% endif %}
 
   <p class="disclaimer">
-    <strong>Disclaimer:</strong> AI-generated draft. Verify against current CAPRs / CAPPs and
-    your wing's instructions before submission. Do not submit PII; this app does not store input.
+    <strong>Disclaimer:</strong> Unofficial, experimental AI-generated draft. Verify against current
+    CAPRs / CAPPs and your wing's instructions before submission. This app does not store input.
     Uses publicly available CAP publication references; not affiliated with Civil Air Patrol Inc.
   </p>
 </main>

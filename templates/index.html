@@ -38,6 +38,8 @@
     .btn-primary:hover { background:#f59e0b; color:var(--ink); }
     .btn-ghost { background:rgba(255,255,255,0.08); color:#f8fafc; border:1px solid rgba(255,255,255,0.18); }
     .btn-ghost:hover { background:rgba(255,255,255,0.15); color:#fff; }
+    .safety-boundary { max-width:920px; margin:22px auto 0; padding:16px 20px; background:#fff7ed; color:#7c2d12; border:2px solid #fb923c; border-radius:12px; font-size:14px; text-align:left; }
+    .safety-boundary strong { color:#9a3412; }
 
     section { max-width:920px; margin:0 auto; padding:56px 24px; }
     section h2 { font-size:28px; margin:0 0 8px; letter-spacing:-0.01em; }
@@ -146,9 +148,9 @@ a:hover{color:#c4b5fd}
   </div>
 
   <section class="hero">
-    <span class="badge">Three previews · Advanced $29.99/month</span>
+    <span class="badge">Civic · $14.99/month · 40 units/day · 200/month</span>
     <h1>Paid planning tools for the people who <em>fly the missions</em>.</h1>
-    <p class="lede">Practical tools for Civil Air Patrol volunteers: regulation source leads, cadet Achievement Test practice, and de-identified squadron meeting drafts. Every output is a review aid; current CAP publications and authorized leaders remain the source of truth.</p>
+    <p class="lede"><strong>Unofficial, experimental CAP modules.</strong> Practical tools for Civil Air Patrol volunteers: regulation source leads, cadet Achievement Test practice, and de-identified squadron meeting drafts. Every output is a review aid; current CAP publications and authorized leaders remain the source of truth.</p>
     <div class="cta-row">
       <a class="btn btn-primary" href="https://capr.freshskyai.com" target="_blank" rel="noopener">Try CAPR Search →</a>
       <a class="btn btn-ghost" href="/wings">Find your wing →</a>
@@ -156,12 +158,18 @@ a:hover{color:#c4b5fd}
     </div>
   </section>
 
+  <aside class="safety-boundary" role="note" aria-label="Sensitive data boundary">
+    <strong>No sensitive data:</strong> Never submit rosters, CAPIDs, PHI, incident identifiers,
+    operational secrets, or eServices data. These unofficial, experimental modules are not
+    Civil Air Patrol systems.
+  </aside>
+
   <section>
     <div class="story">
       <h3>The pitch, short version</h3>
       <p>I'm a Civil Air Patrol member. I'm also a software engineer who builds AI tools for civic problems through Fresh Sky LLC. CAP eats so much volunteer time on admin — looking up the right CAPR section, prepping cadets for AT cycles, building meeting agendas — that I built focused tools to take the worst of it off your plate.</p>
       <p>Three apps live now: <strong>CAPR Search</strong> answers regulation questions in plain language with citations · <strong>CAPStudy</strong> generates Achievement Test practice questions for cadets across the Curry through Eaker progression · <strong>CAPMeeting</strong> builds a 90-minute squadron meeting agenda with safety briefing, AE moment, and drill plan from a few inputs.</p>
-      <p>All three include three previews, then Advanced access at $29.99/month. No long-term contracts. No PII. No member roster uploads.</strong> The only thing you give it is the question or the inputs you'd be typing anyway. The reason I can keep this affordable: operator-side cost is near-zero on Cloud Run with scale-to-zero, and I'm not charging for my time.</p>
+      <p>All three include three previews, then Civic access at $14.99/month with 40 usage units per day and 200 per month. Civic access covers CivicOps and CAP modules only; it does not include non-Civic Fresh Sky products. Existing eligible subscriptions continue to be recognized. No long-term contracts.</p>
       <div class="signature">— A CAP member · Squadron-level volunteer</div>
     </div>
   </section>
@@ -219,7 +227,7 @@ a:hover{color:#c4b5fd}
 
     <div class="pitch">
       <h3>Have something else that eats time?</h3>
-      <p>If a CAP task — recurring or annual — eats your evenings, send me the description and I'll consider it for the paid tool roadmap. Same constraint as the live tools: nothing that touches live mission ops, cadet PII, or competes with eServices.</p>
+      <p>If a CAP task — recurring or annual — eats your evenings, send me a non-sensitive description and I'll consider it for the paid tool roadmap. Same constraint as the live tools: nothing that touches live mission ops, rosters, CAPIDs, PHI, incident identifiers, operational secrets, or eServices.</p>
     </div>
   </section>
 
@@ -238,10 +246,10 @@ a:hover{color:#c4b5fd}
       <h3 style="margin-top:24px;">What's deliberately out of scope</h3>
       <ul>
         <li><strong>Anything during a live mission.</strong> SAR tasking, ICS forms in flight, ramp checks during ops — life-safety and USAF integration risks. Hard line.</li>
-        <li><strong>Cadet PII / parental consent docs.</strong> CPP-regulated. Zero data of that kind crosses our backend.</li>
+        <li><strong>Rosters, CAPIDs, PHI, incident identifiers, or operational secrets.</strong> Zero data of those kinds belongs in these tools.</li>
         <li><strong>eServices integration.</strong> No NHQ API; reverse-engineering = no. Tools complement eServices, never replace or scrape.</li>
         <li><strong>Anything that competes with NHQ's own systems.</strong> If NHQ builds it, we don't.</li>
-        <li><strong>No member rosters uploaded.</strong> The tools take questions and inputs you'd be typing anyway. We never ask for member lists.</li>
+        <li><strong>No member rosters uploaded.</strong> We never ask for member lists or eServices exports.</li>
       </ul>
     </div>
   </section>
@@ -254,7 +262,7 @@ a:hover{color:#c4b5fd}
 
   <footer>
     <p>Built under the <a href="https://www.freshskyai.com/#hulec" target="_blank" rel="noopener">HULEC rule</a> — Human-centered · Unique · Legal · Efficient · Cheap. Part of <a href="https://www.freshskyai.com" target="_blank" rel="noopener">Fresh Sky AI</a> by Fresh Sky LLC.</p>
-    <p>Not affiliated with Civil Air Patrol, the U.S. Air Force, CAP NHQ, or any wing/region. Tools produce drafts and study aids; users are responsible for verifying answers against current regulations.</p>
+    <p>Unofficial, experimental modules. Not affiliated with Civil Air Patrol, the U.S. Air Force, CAP NHQ, or any wing/region. Tools produce drafts and study aids; users are responsible for verifying answers against current regulations.</p>
       <p style="margin-top:8px;font-size:11.5px;"><a href="/privacy" style="color:#94a3b8;text-decoration:underline;">Privacy</a> · <a href="/terms" style="color:#94a3b8;text-decoration:underline;">Terms</a> · <a href="https://www.freshskyai.com/contact" target="_blank" rel="noopener" style="color:#94a3b8;text-decoration:underline;">Contact</a></p>
   </footer>
 </body>
