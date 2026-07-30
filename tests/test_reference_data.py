@@ -70,7 +70,7 @@ class ReferenceDataTests(unittest.TestCase):
         self.assertIn('40 usage units', landing)
         self.assertIn('200 per month', landing)
         self.assertIn(
-            'caece1a8f78bd7ea4288059638a8db864801552a',
+            'c0ead769b832868d5c48f49656566f70d84e15ac',
             requirements,
         )
         self.assertIn('FRESHSKY_WORKSPACE_ID=civic', workflow)
