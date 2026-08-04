@@ -140,13 +140,15 @@ a:hover{color:#c4b5fd}
 {% include '_portfolio_skin.html' %}
 </head>
 <body>
-  <div class="topbar">
+  <nav class="topbar" aria-label="Primary navigation">
     <span><strong>✈️ Fresh Sky AI</strong> for Civil Air Patrol</span>
     <span><a href="#tools">Tools</a> <a href="#why">Why</a> <a href="https://www.freshskyai.com/contact" target="_blank" rel="noopener">Contact</a></span>
-  </div>
+  </nav>
+
+  <main>
 
   <section class="hero">
-    <span class="badge">Three previews · Advanced $29.99/month</span>
+    <span class="badge">Three previews · Civic $14.99/month · No automatic overage charges</span>
     <h1>Paid planning tools for the people who <em>fly the missions</em>.</h1>
     <p class="lede">Practical tools for Civil Air Patrol volunteers: regulation source leads, cadet Achievement Test practice, and de-identified squadron meeting drafts. Every output is a review aid; current CAP publications and authorized leaders remain the source of truth.</p>
     <div class="cta-row">
@@ -159,10 +161,10 @@ a:hover{color:#c4b5fd}
   <section>
     <div class="story">
       <h3>The pitch, short version</h3>
-      <p>I'm a Civil Air Patrol member. I'm also a software engineer who builds AI tools for civic problems through Fresh Sky LLC. CAP eats so much volunteer time on admin — looking up the right CAPR section, prepping cadets for AT cycles, building meeting agendas — that I built focused tools to take the worst of it off your plate.</p>
+      <p>Fresh Sky LLC builds focused software for recurring civic and volunteer-administration work. CAP volunteers can spend substantial time finding the right publication, preparing cadet study materials, and drafting meeting agendas, so these tools focus narrowly on those public-source and de-identified workflows.</p>
       <p>Three apps live now: <strong>CAPR Search</strong> answers regulation questions in plain language with citations · <strong>CAPStudy</strong> generates Achievement Test practice questions for cadets across the Curry through Eaker progression · <strong>CAPMeeting</strong> builds a 90-minute squadron meeting agenda with safety briefing, AE moment, and drill plan from a few inputs.</p>
-      <p>All three include three previews, then Advanced access at $29.99/month. No long-term contracts. No PII. No member roster uploads.</strong> The only thing you give it is the question or the inputs you'd be typing anyway. The reason I can keep this affordable: operator-side cost is near-zero on Cloud Run with scale-to-zero, and I'm not charging for my time.</p>
-      <div class="signature">— A CAP member · Squadron-level volunteer</div>
+      <p>All three include three previews, then Civic access at $14.99/month. No long-term contracts or automatic overage charges. No PII. No member roster uploads. The only input is the de-identified question or planning detail needed for the selected tool. Scale-to-zero hosting helps keep the normal monthly price bounded.</p>
+      <div class="signature">— Fresh Sky LLC · New Jersey</div>
     </div>
   </section>
 
@@ -225,7 +227,7 @@ a:hover{color:#c4b5fd}
 
   <section id="why">
     <h2 style="text-align:center;">Why this exists</h2>
-    <p class="sub">Why a CAP member would build focused tools for CAP, and what's NOT in scope.</p>
+    <p class="sub">Why Fresh Sky LLC built focused CAP tools, and what's NOT in scope.</p>
 
     <div class="why-list">
       <h3>The thinking</h3>
@@ -251,6 +253,8 @@ a:hover{color:#c4b5fd}
     <p>Squadron commander? Cadet program officer? Wing staff? CAP member who'd actually use this? Tell me what would help.</p>
     <a class="email" href="https://www.freshskyai.com/contact" target="_blank" rel="noopener">Fresh Sky contact page</a>
   </section>
+
+  </main>
 
   <footer>
     <p>Built under the <a href="https://www.freshskyai.com/#hulec" target="_blank" rel="noopener">HULEC rule</a> — Human-centered · Unique · Legal · Efficient · Cheap. Part of <a href="https://www.freshskyai.com" target="_blank" rel="noopener">Fresh Sky AI</a> by Fresh Sky LLC.</p>
