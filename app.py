@@ -10,7 +10,12 @@ import os
 
 from flask import Response, Flask, jsonify, render_template, request
 
-from tools_data import TOOLS as _TOOLS, get_tool as _get_tool, all_slugs as _all_slugs
+from tools_data import (
+    TOOLS as _TOOLS,
+    all_slugs as _all_slugs,
+    get_tool as _get_tool,
+    review_evidence as _review_evidence,
+)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', os.urandom(32))
@@ -50,6 +55,11 @@ def index():
 @app.route('/health')
 def health():
     return jsonify(status='ok')
+
+
+@app.route('/review-evidence')
+def review_evidence():
+    return jsonify(_review_evidence())
 
 
 _PRIVACY_HTML = """<!DOCTYPE html>

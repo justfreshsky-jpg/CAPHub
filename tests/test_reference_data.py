@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from tools_data import SOURCE_RETRIEVED, TOOLS
+from tools_data import SOURCE_RETRIEVED, TOOLS, review_evidence
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,6 +44,23 @@ class ReferenceDataTests(unittest.TestCase):
         self.assertIn('CAPR 1-1 Ethics Policy', prompt)
         self.assertIn('CAPR 60-2 Cadet Protection Program', prompt)
         self.assertIn('Never cite CAPR 20-1 for organization', prompt)
+        field_labels = ' '.join(field[1] for field in TOOLS['sui-prep']['fields'])
+        self.assertIn('ready for review', field_labels)
+        self.assertNotIn('CAPR-compliant', field_labels)
+
+    def test_review_evidence_lists_civicops_boundaries_without_release_claims(self):
+        evidence = review_evidence()
+        self.assertEqual(evidence['product_id'], 'civicops')
+        self.assertEqual(evidence['source_retrieved'], SOURCE_RETRIEVED)
+        self.assertEqual(evidence['tool_count'], len(TOOLS))
+        self.assertIn('qualified operational review', ' '.join(evidence['open_items']))
+        self.assertIn('not an operational authorization', evidence['notice'])
+        for tool in evidence['tools']:
+            with self.subTest(tool=tool['slug']):
+                self.assertEqual(tool['release_state'], 'reviewed_source_leads')
+                self.assertFalse(tool['missing_reference_fields'])
+                self.assertIn('draft_or_planning_aid_only', tool['boundaries'])
+                self.assertIn('no_affiliation_or_endorsement_claim', tool['boundaries'])
 
     def test_deploy_workflow_is_manual_and_deploys_repository_source(self):
         workflow = (ROOT / '.github/workflows/deploy.yml').read_text()

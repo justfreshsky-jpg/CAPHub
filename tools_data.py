@@ -121,7 +121,7 @@ TOOLS: dict[str, dict] = {
         'fields': [
             ('unit',      'Unit type (squadron / group / wing) and approximate size',                      'input'),
             ('weeks',     'Weeks remaining until the SUI',                                                  'input'),
-            ('strengths', 'Areas where you feel solid (CAPR-compliant, well-documented)',                   'textarea'),
+            ('strengths', 'Areas where you feel well documented or ready for review',                       'textarea'),
             ('worries',   'Areas where you suspect issues (out-of-date OIs, missing PD records, finance, safety logs, etc.)', 'textarea'),
         ],
         'authorities': [
@@ -172,3 +172,48 @@ def get_tool(slug: str) -> dict | None:
 
 def all_slugs() -> list[str]:
     return list(TOOLS.keys())
+
+
+def review_evidence() -> dict:
+    """Return a deterministic release-review summary for the CivicOps CAP tools."""
+    tools = []
+    open_items = []
+    for slug, tool in TOOLS.items():
+        authorities = tool.get('authorities') or []
+        missing = [
+            key
+            for key in ('title', 'version', 'url', 'retrieved')
+            for source in authorities
+            if not source.get(key)
+        ]
+        if not authorities:
+            missing.append('authorities')
+        tools.append({
+            'slug': slug,
+            'title': tool['title'],
+            'reviewed_reference_count': len(authorities),
+            'retrieved': SOURCE_RETRIEVED,
+            'missing_reference_fields': sorted(set(missing)),
+            'release_state': 'reviewed_source_leads' if not missing else 'needs_reference_review',
+            'boundaries': [
+                'draft_or_planning_aid_only',
+                'requires_current_publication_or_unit_review',
+                'no_affiliation_or_endorsement_claim',
+                'no_live_operations_or_sensitive_personal_data',
+            ],
+        })
+        if missing:
+            open_items.append(f"{slug}: complete reference metadata before promotion")
+    if not open_items:
+        open_items.append('Recheck current publications and qualified operational review before any promotion.')
+    return {
+        'product_id': 'civicops',
+        'source_retrieved': SOURCE_RETRIEVED,
+        'tool_count': len(tools),
+        'tools': tools,
+        'open_items': open_items,
+        'notice': (
+            'This evidence pack tracks reviewed source leads and safety boundaries. '
+            'It is not an operational authorization, endorsement, or current-publication guarantee.'
+        ),
+    }
